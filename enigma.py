@@ -3,14 +3,12 @@ class rotor_set(object):
 
         from rotor import rotor
 
-
-
         self.rotors = rotors
         self.rotors_reversed = self.rotors[::-1]
         self.reflector = reflector
 
     def encode_character(self, character):
-        input = (character, True) # 'True': Always advance the first rotor
+        input = (character, 0) # 'True': Always advance the first rotor
         for rotor in self.rotors:
             input = rotor.right_to_left(input)
         
@@ -30,16 +28,22 @@ class rotor_set(object):
         for rotor in self.rotors:
             rotor.reset()
 
+    def __repr__(self):
+        return 'Rotor Set with rotors ' + self.rotors.__repr__()
+
+    def __str__(self):
+        return self.rotors.__repr__()
         
 class enigma(object):
     def __init__(self, rotor_choices=[1,2,3], rotor_positions=[0,0,0], reflect_choice='B'):
+        from enigma import rotor_set
         from rotor import rotor
         from reflector import reflector
         self.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        self.rotors = [rotor(r, p) for r, p in zip(rotor_choices, rotor_positions)]
-        self.reflector = reflector(reflect_choice)
+        rotors = [rotor(r, p) for r, p in zip(rotor_choices, rotor_positions)]
+        reflector = reflector(reflect_choice)
         
-        self.rotor_set = rotor_set(self.rotors, self.reflector)
+        self.rotor_set = rotor_set(rotors, reflector)
         
     def encode(self, to_encode):
         formatted = ''
@@ -48,9 +52,19 @@ class enigma(object):
             if u in self.alphabet:
                 formatted += u
 
-        return self.rotor_set.encode(formatted)
-    def reset(self):
+        encoded = self.rotor_set.encode(formatted)
         self.rotor_set.reset()
+        return encoded
+
+    def decode(self, to_decode):
+        return self.encode(to_decode)
+
+    def __repr__(self):
+        return 'Enigma with ' + self.rotor_set.__repr__()
+    def __str__(self):
+        return self.rotor_set.rotors.__repr__()
+
+ 
 
 if __name__ == '__main__':
     e = enigma([3,2,1])
