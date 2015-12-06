@@ -7,7 +7,6 @@ was
 nachos
 artichoke
 you
-me
 elephant
 how
 why
