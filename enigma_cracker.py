@@ -42,7 +42,7 @@ class enigma_cracker(object):
                     runs += 1
 
                     if runs % 1000000 == 0:
-                        print "Tried " + str(runs) + " of " + str(total_runs)
+                        print "Tried " + str(runs) + " of " + str(total_runs) + " " + str(round(float(runs) / total_runs, 2)*100) + "%"
                     
 
                 self.results.append([matches, decoded, e.__repr__()])
