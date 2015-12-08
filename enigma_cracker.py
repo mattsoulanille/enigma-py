@@ -15,7 +15,8 @@ class enigma_cracker(object):
     def attack(self):
         from itertools import permutations, product
         from enigma import enigma
-
+        import sys
+        
         rotors = [1,2,3]
         start_points = range(26)
         rotor_perms = [x for x in permutations(rotors, 3)]
@@ -42,13 +43,18 @@ class enigma_cracker(object):
                     runs += 1
 
                     if runs % 1000000 == 0:
-                        print "Tried " + str(runs) + " of " + str(total_runs) + " " + str(round(float(runs) / total_runs, 2)*100) + "%"
-                    
+                        progress_str = "Tried " + str(runs) + " of " + str(total_runs) + " " + str(round(float(runs) / total_runs, 3)*100) + "%"
+                        
+                        sys.stdout.write('\r')
+                        sys.stdout.flush()
+                        sys.stdout.write(progress_str)
+                        
 
                 self.results.append([matches, decoded, e.__repr__()])
-                
-        self.results.sort(key=lambda x: x[0])
 
+        print # print a newline
+        self.results.sort(key=lambda x: x[0])
+        
 
     def format_results(self):
 
@@ -79,11 +85,17 @@ if __name__ == '__main__':
     parser.add_argument('ciphertext', type=str, help='encoded enigma text to attack')
     parser.add_argument('wordlist', type=file, help='wordlist to search from')
     parser.add_argument('-o', '--outfile', type=str, help='write results to a file instead of printing')
+    parser.add_argument('-p', '--profiling', dest='profiling', action='store_true', help='print program profiling results too')
+    parser.set_defaults(profiling=False)
     args = parser.parse_args()
 
 
     cracker = enigma_cracker(args.ciphertext, args.wordlist)
-    cracker.attack()
+    if args.profiling:
+        import cProfile
+        cProfile.run('cracker.attack()')
+    else:
+        cracker.attack()
 
     if args.outfile is not None:
         import os.path

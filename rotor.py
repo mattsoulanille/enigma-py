@@ -8,17 +8,22 @@ class rotor(object):
         self.rotor_number = rotor_number
 
         self.position = rotor_position
+
         self.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        self.alphabet_dict = {x:y for y, x in enumerate(self.alphabet)}
 
         self.size = len(self.alphabet)
         
         self.left = self.rotors[rotor_number][0]
+        self.left_dict =  {x:y for y, x in enumerate(self.left)}
+
         self.right = self.alphabet
+        self.right_dict = {x:y for y, x in enumerate(self.right)}
 
         self.original_position = rotor_position
         self.debug = False
         
-        self.advance_position = self.alphabet.index(self.rotor[1])
+        self.advance_position = self.alphabet_dict[self.rotor[1]]
 
     def advance_rotor(self):
         self.position = (self.position + 1) % self.size
@@ -26,14 +31,14 @@ class rotor(object):
 
     # Accounts for half of the rotor's position
     def caesar_shift(self, character):
-        new_index = (self.alphabet.index(character) + self.position) % self.size
+        new_index = (self.alphabet_dict[character] + self.position) % self.size
         if self.debug:
             print 'caesar shift ' + str(character) + ' to ' + str(self.alphabet[new_index])
         return self.alphabet[new_index]
 
     # Accounts for the other half of the rotor's position
     def caesar_shift_back(self, character):
-        alphabet_index = self.alphabet.index(character)
+        alphabet_index = self.alphabet_dict[character]
 
         new_index = (alphabet_index - self.position + self.size) % self.size
 
@@ -52,7 +57,7 @@ class rotor(object):
                     
             
         shifted = self.caesar_shift(character)
-        encoded = self.left[self.right.index(shifted)]
+        encoded = self.left[self.right_dict[shifted]]
         
         if self.debug:
             print 'encode rtl ' + shifted + ' to ' + encoded + ' advance_next: ' + str(advance_next)
@@ -62,7 +67,7 @@ class rotor(object):
 
     def left_to_right(self, character):
         shifted = self.caesar_shift(character)
-        encoded = self.right[self.left.index(shifted)]
+        encoded = self.right[self.left_dict[shifted]]
         if self.debug:
             print 'encode ltr ' + character + ' to ' + encoded
         shifted_back = self.caesar_shift_back(encoded)
