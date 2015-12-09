@@ -9,7 +9,10 @@ class enigma_fast(object):
         
         self.rotors = {1:("EKMFLGDQVZNTOWYHXUSPAIBRCJ","Q"),
                        2:("AJDKSIRUXBLHWTMCQGZNPYFVOE","E"),
-                       3:("BDFHJLCPRTXVZNYEIWGAKMUSQO","V")}
+                       3:("BDFHJLCPRTXVZNYEIWGAKMUSQO","V"),
+                       4:("ESOVPZJAYQUIRHXLNFTGKDCMWB","J"),
+                       5:("VZBRGITYUPSDNHLXAWMJQOFECK","Z")}
+        
 
         self.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         self.alphabet_dict = {x:y for y, x in enumerate(self.alphabet)}

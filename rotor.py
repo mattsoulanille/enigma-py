@@ -2,7 +2,9 @@ class rotor(object):
     def __init__(self, rotor_number, rotor_position, *args):
         self.rotors = {1:("EKMFLGDQVZNTOWYHXUSPAIBRCJ","Q"),
                        2:("AJDKSIRUXBLHWTMCQGZNPYFVOE","E"),
-                       3:("BDFHJLCPRTXVZNYEIWGAKMUSQO","V")}
+                       3:("BDFHJLCPRTXVZNYEIWGAKMUSQO","V"),
+                       4:("ESOVPZJAYQUIRHXLNFTGKDCMWB","J"),
+                       5:("VZBRGITYUPSDNHLXAWMJQOFECK","Z")}
 
         self.rotor = self.rotors[rotor_number]
         self.rotor_number = rotor_number

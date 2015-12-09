@@ -15,15 +15,19 @@ class enigma_cracker(object):
 
     def attack(self):
         from itertools import permutations, product
+        from bisect import insort
 
         if self.use_fast:
             from enigma_fast import enigma_fast
         else:
             from enigma import enigma
 
+
         import sys
+
+
         
-        rotors = [1,2,3]
+        rotors = [1,2,3,4,5]
         start_points = range(26)
         rotor_perms = [x for x in permutations(rotors, 3)]
         position_choices = [x for x in product(start_points, start_points, start_points)]
@@ -56,16 +60,23 @@ class enigma_cracker(object):
 
                     if runs % 1000000 == 0:
                         progress_str = "Tried " + str(runs) + " of " + str(total_runs) + " " + str(round(float(runs) / total_runs, 3)*100) + "%"
-                        
+
+
                         sys.stdout.write('\r')
                         sys.stdout.flush()
-                        sys.stdout.write(progress_str)
-                        
+                        to_write = progress_str
+                        if self.results != []:
+                            to_write += "\tHighest Score: " + str(self.results[-1][0]) + "\tResult: " + self.results[-1][1]
+                        sys.stdout.write(to_write)
 
-                self.results.append([matches, decoded, rotor_choices, rotor_positions])
+
+
+                # sort while adding elements
+                insort(self.results, [matches, decoded, rotor_choices, rotor_positions])
+                #self.results.append([matches, decoded, rotor_choices, rotor_positions])
 
         print # print a newline
-        self.results.sort(key=lambda x: x[0])
+        #self.results.sort(key=lambda x: x[0])
         
 
     def format_results(self):
