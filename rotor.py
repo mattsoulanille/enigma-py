@@ -48,13 +48,13 @@ class rotor(object):
         return self.alphabet[new_index]
 
     def right_to_left(self, (character, advance) ):
-        advance_next = ((self.position - self.advance_position) + self.size) % self.size
+        advance_next = (self.position == self.advance_position)
 
-        if advance == 0:
+
+        # This isn't quite right. Only the middle rotor behaves strangely
+        # with its double step mechanic.
+        if advance:
             self.advance_rotor()
-        elif advance == 1 and advance_next == 0:
-            self.advance_rotor()
-                    
             
         shifted = self.caesar_shift(character)
         encoded = self.left[self.right_dict[shifted]]

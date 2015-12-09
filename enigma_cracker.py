@@ -4,17 +4,23 @@ import argparse
 
 
 class enigma_cracker(object):
-    def __init__(self, ciphertext, wordlist):
-
+    def __init__(self, ciphertext, wordlist, use_fast=False):
+        
         self.ciphertext = ciphertext.upper()
         self.wordlist = [x.rstrip('\n').upper() for x in wordlist.readlines()]
 
         self.results = []
         self.formatted_results = []
+        self.use_fast = use_fast
 
     def attack(self):
         from itertools import permutations, product
-        from enigma import enigma
+
+        if self.use_fast:
+            from enigma_fast import enigma_fast
+        else:
+            from enigma import enigma
+
         import sys
         
         rotors = [1,2,3]
@@ -31,10 +37,16 @@ class enigma_cracker(object):
         for rotor_choices in rotor_perms:
             #print rotor_choices
             for rotor_positions in position_choices:
+                
+                if self.use_fast:
+                    e = enigma_fast()
+                    decoded = e.encode(self.ciphertext, rotor_choices, rotor_positions)
 
-                e = enigma(rotor_choices, rotor_positions)
+                else:
+                    e = enigma(rotor_choices, rotor_positions)
+                    decoded = e.encode(self.ciphertext)
                 matches = 0
-                decoded = e.encode(self.ciphertext)
+
 
                 for word in self.wordlist:
                     if word in decoded:
@@ -50,7 +62,7 @@ class enigma_cracker(object):
                         sys.stdout.write(progress_str)
                         
 
-                self.results.append([matches, decoded, e.__repr__()])
+                self.results.append([matches, decoded, rotor_choices, rotor_positions])
 
         print # print a newline
         self.results.sort(key=lambda x: x[0])
@@ -59,7 +71,8 @@ class enigma_cracker(object):
     def format_results(self):
 
         for x in reversed(self.results):
-            self.formatted_results.append( "Found " + str(x[0]) + " letter matches in decoding " + x[1] + " Settings: " + str(x[2]))
+            
+            self.formatted_results.append( "Found " + str(x[0]) + " letter matches in decoding " + x[1] + " Rotors: " + str(x[2]) + " Start positions: " + str(x[3]))
 
     def write_results(self, out_file):
         assert isinstance(out_file, file)
@@ -86,11 +99,15 @@ if __name__ == '__main__':
     parser.add_argument('wordlist', type=file, help='wordlist to search from')
     parser.add_argument('-o', '--outfile', type=str, help='write results to a file instead of printing')
     parser.add_argument('-p', '--profiling', dest='profiling', action='store_true', help='print program profiling results too')
+    parser.add_argument('-f', '--fast', dest='fast', action='store_true', help='use enigma_fast instead of enigma')
     parser.set_defaults(profiling=False)
+    parser.set_defaults(fast=False)
     args = parser.parse_args()
 
 
-    cracker = enigma_cracker(args.ciphertext, args.wordlist)
+    cracker = enigma_cracker(args.ciphertext, args.wordlist, args.fast)
+
+
     if args.profiling:
         import cProfile
         cProfile.run('cracker.attack()')

@@ -8,9 +8,17 @@ class rotor_set(object):
         self.reflector = reflector
 
     def encode_character(self, character):
-        input = (character, 0) # 'True': Always advance the first rotor
-        for rotor in self.rotors:
-            input = rotor.right_to_left(input)
+        input = (character, True) # 'True': Always advance the first rotor
+
+        for i in range(len(self.rotors)):
+            rotor = self.rotors[i]
+
+            # if this is a middle rotor, do the double step
+            if (i > 0 and i < len(self.rotors) - 1) and (rotor.position == rotor.advance_position):
+                input = rotor.right_to_left((input[0], True))
+            else:
+                input = rotor.right_to_left(input)
+
         
         output = self.reflector.reflect(input[0])
         
