@@ -151,8 +151,8 @@ class enigma_cracker(object):
     def format_results(self):
 
         for x in reversed(self.results):
-            formatted = ("Found " + str(x[0]) +
-                         " letter matches in decoding " + x[1] +
+            formatted = ("Got score " + str(x[0]) +
+                         " for decoding " + x[1] +
                          " Rotors: " + str(x[2]) +
                          " Start positions: " + str(x[3]))
 
