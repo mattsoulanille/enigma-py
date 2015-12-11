@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     rotor_positions = [int(x) for x in rotor_positions]
 
-    plugs = [[x.split(':').upper(), x.split(':')[1].upper()] for x in args.plugboard_pairs]
+    plugs = [[x.split(':')[0].upper(), x.split(':')[1].upper()] for x in args.plugboard_pairs]
 
     e = enigma(rotors, rotor_positions, args.reflector.upper(), plugs)
 
