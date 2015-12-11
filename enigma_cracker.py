@@ -187,7 +187,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--outfile', type=str, help='write results to a file instead of printing')
     parser.add_argument('-p', '--profiling', dest='profiling', action='store_true', help='print program profiling results too')
     parser.add_argument('-f', '--fast', dest='fast', action='store_true', help='use enigma_fast instead of enigma')
-    parser.add_argument('-q', '--ngrams', dest='ngrams', action='store_true', help='use ngrams instead of wordlist matching')
+    parser.add_argument('-n', '--ngrams', dest='ngrams', action='store_true', help='use ngrams instead of wordlist matching')
     parser.set_defaults(profiling=False)
     parser.set_defaults(fast=False)
     parser.set_defaults(ngrams=False)
