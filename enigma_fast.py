@@ -1,6 +1,3 @@
-
-
-
 class enigma_fast(object):
     def __init__(self):
         self.reflectors = {"A":"EJMZALYXVBWFCRQUONTSPIKHGD",
