@@ -20,9 +20,6 @@ class enigma_cracker(object):
         self.ngram_dict = {x:y for x, y in self.ngrams}
         self.ngram_size = len(self.ngrams[0][0])
         self.ngram_floor = math.log10(0.01 / total)
-        print self.ngram_floor
-        print self.ngram_dict["TION"]
-        print self.ngram_dict["AACX"]
         # here is an example recursive implementation of sum_ngram_scores.
         # It is too slow, so I have made another.
         ##########################################################
@@ -87,6 +84,7 @@ class enigma_cracker(object):
 
         
     def attack(self, scoring_function):
+        import os
         from itertools import permutations, product
         from bisect import insort
 
@@ -130,15 +128,21 @@ class enigma_cracker(object):
                                     " of " + str(total_runs) +" "
                                     + str(round(float(runs) / total_runs, 3)*100) + "%")
 
-
+                    width = int(os.popen('stty size', 'r').read().split()[1])
                     sys.stdout.write('\r')
                     sys.stdout.flush()
                     to_write = progress_str
                     if self.results != []:
-                        to_write += ("\tHighest Score: " +
+                        to_write += (" Highest Score: " +
                                      str(self.results[-1][0]) +
-                                     "\tResult: " +
-                                     self.results[-1][1])
+                                     " Result: ")
+                                     
+                        width_left = width - len(to_write)
+                        if len(self.results[-1][1]) > width_left - 3:
+                            to_write += self.results[-1][1][:width_left - 3] + "..."
+                        else:
+                            to_write += self.results[-1][1][:width_left - 3]
+ 
                         
                     sys.stdout.write(to_write)
 
