@@ -54,13 +54,13 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Enigma machine emulator')
     parser.add_argument('ciphertext', type=str, help='text to encode')
-    parser.add_argument('rotors', type=str, default="1,2,3", help=('enigma rotors to use left to right separated by commas. ' +
+    parser.add_argument('rotors', type=str, nargs='?', default="1,2,3", help=('enigma rotors to use left to right separated by commas. ' +
                                                   'e.g. "1,2,3" would put rotor 1 by the reflector, rotor 2' +
                                                   ' in the middle, and rotor 3 by the lightbox. Default = "1,2,3"'))
-    parser.add_argument('rotor_positions', type=str, default="H,D,X", help=('starting positions for rotors from right to left separated by commas.' +
+    parser.add_argument('rotor_positions', type=str, nargs='?', default="H,D,X", help=('starting positions for rotors from right to left separated by commas.' +
                                                            'can be integers or letters. ' +
                                                            'e.g. "0,1,2" would set the rotors to "A B C". Default = "H,D,X"'))
-    parser.add_argument('reflector', type=str, default="B", help='enigma reflector to use. "A", "B", or "C". Default = "B"')
+    parser.add_argument('reflector', type=str, nargs='?', default="B", help='enigma reflector to use. "A", "B", or "C". Default = "B"')
     parser.add_argument('plugboard_pairs', type=str, nargs='*', default = '', help='enigma plugboard. Add plugs like so. A:B C:D E:Z.... Default is no plugs.')
 
     args = parser.parse_args()
@@ -77,8 +77,9 @@ if __name__ == '__main__':
 
     rotor_positions = [int(x) for x in rotor_positions]
 
-    plugs = [[x.split(':')[0].upper(), x.split(':')[1].upper()] for x in args.plugboard_pairs]
+    plugs = [[x.split(':').upper(), x.split(':')[1].upper()] for x in args.plugboard_pairs]
 
     e = enigma(rotors, rotor_positions, args.reflector.upper(), plugs)
+
     print e.encode(args.ciphertext)
         
