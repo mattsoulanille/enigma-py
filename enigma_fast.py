@@ -1,3 +1,4 @@
+# Faster but abandoned. Doesn't have a plugboard, but works with no plugboard
 class enigma_fast(object):
     def __init__(self):
         self.reflectors = {"A":"EJMZALYXVBWFCRQUONTSPIKHGD",
